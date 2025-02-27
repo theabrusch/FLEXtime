@@ -26,8 +26,6 @@ def main(args):
         dset = args.dataset
 
     # get predictions and labels
-    if args.random_model:
-        dset = f'{dset}_random'
     dset_path = f'{args.output_path}/{dset}_{args.split}.pkl'
     if not os.path.exists(dset_path):
         attributions = {}
@@ -119,28 +117,28 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Synthetic data explainability')
-    parser.add_argument('--dataset', type = str, default = 'pam', help='Dataset to use')
-    parser.add_argument('--data_path', type = str, default = '/Users/theb/Desktop/data/dataverse_files/PAM/', help='Path to AudioMNIST data')#
+    parser.add_argument('--dataset', type = str, default = 'pam', help='Dataset to use', choices = ['pam', 'synth_voigt', 'audio', 'sleepedf', 'ecg', 'epilepsy'])
+    parser.add_argument('--data_path', type = str, default = '/Users/theb/Desktop/data/dataverse_files/PAM/', help='Path to data')#
     parser.add_argument('--save_data', type = eval, default = False, help='Save data')
     parser.add_argument('--force_compute', type = eval, default = False, help='Force compute attributions')
     parser.add_argument('--validate', type = eval, default = False, help='Use validation set')
     parser.add_argument('--synth_length', type = int, default = 2000, help='Length of synthetic data')
     parser.add_argument('--noise_level', type = float, default = 0.2, help='Noise level for synthetic data')
-    parser.add_argument('--split', type = int, default = 1, help='Split to use for TimeX datasets')
-    parser.add_argument('--explanation_methods', type = str, default = ['filterbank'], nargs = '+', help='Attribution methods to compute')
-    parser.add_argument('--random_model', type = eval, default = False, help='Use random model')
-    parser.add_argument('--compute_accuracy_scores', type = eval, default = True, help='Compute accuracy scores')
-    parser.add_argument('--labeltype', type = str, default = 'digit', help='Type of label to use')
-    # argumenst for Filteropt and Freqopt
-    parser.add_argument('--regstrength', type = float, default = 1., help='Regularization strength for Filteropt')
-    parser.add_argument('--time_reg_strength', type = float, default = 1., help='Time regularization strength for Filteropt')
+    parser.add_argument('--split', type = int, default = 1, help='Split to use for datasets')
+    parser.add_argument('--explanation_methods', type = str, default = ['flextime'], nargs = '+', help='Attribution methods to compute') # ['freqmask', 'flextime', 'freqrise', 'ig', 'saliency', 'guided-backprop', 'gxi']
+    parser.add_argument('--compute_accuracy_scores', type = eval, default = True, help='Compute faithfulness scores')
+    parser.add_argument('--labeltype', type = str, default = 'digit', help='Type of label to use for AudioMNIST')
+    parser.add_argument('--n_samples', type = int, default = 100, help='Number of samples to compute attributions for')
+
+    # argumenst for FLEXtime and FreqMask
+    parser.add_argument('--regstrength', type = float, default = 1., help='Regularization strength for FLExtime')
+    parser.add_argument('--time_reg_strength', type = float, default = 1., help='Time regularization strength for FLEXtime')
     parser.add_argument('--keep_ratio_freqmask', type = float, default = 0.1, help='Keep ratio for Filteropt')
-    parser.add_argument('--keep_ratio_filterbank', type = float, default = 0.1, help='Keep ratio for Filteropt')
+    parser.add_argument('--keep_ratio_filterbank', type = float, default = 0.1, help='Keep ratio for FLEXtime')
     parser.add_argument('--perturb', type = bool, default = True, help='Use dynamic perturbation')
     parser.add_argument('--nfilters', type = int, default = 128, help='Number of filters in the filterbank')
     parser.add_argument('--numtaps', type = int, default = 51, help='Number of taps in the filterbank')
-    parser.add_argument('--n_samples', type = int, default = 100, help='Number of samples to compute attributions for')
-    parser.add_argument('--output_path', type = str, default = 'local_outputs', help='Path to save outputs')
+    parser.add_argument('--output_path', type = str, default = 'output', help='Path to save outputs')
     # arguments for FreqRISE
     parser.add_argument('--freqrise_samples', type = int, default = 3000, help='Number of samples to compute attributions for')
     parser.add_argument('--num_cells', type = int, default = 128, help='Number of cells to drop')

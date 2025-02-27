@@ -109,27 +109,6 @@ def load_data_and_model(args, device, subsample=False, seed = 0):
         model = ConvModel(output_size=16, hidden_layers = 1, hidden_size = 64, kernel_size=31)
         time_dim = -1
         time_length = args.synth_length
-    elif args.dataset == 'synth_voigt_noisy':
-        X = 32
-        Fs = 1000
-        duration = args.synth_length//Fs
-        all_regions = divide_frequency_axis(Fs, num_regions=X)
-
-        salient_region_indices = [6, 13, 20, 27]
-        salient_regions = [all_regions[i] for i in salient_region_indices]
-
-        data, labels = generate_time_series_voigt_noisy(num_samples_per_class=args.n_samples//16, num_sample_regions = 10, num_frequencies=20,
-                                                salient_regions=salient_regions,
-                                                all_regions=all_regions, sampling_frequency=Fs, 
-                                                duration=duration, gamma=1.5, sigma = 0.5, noise_level=args.noise_level, seed = 0 + 1000*args.split, scale = 1)
-        if args.synth_length == 2000:
-            model_path = f'models/synth_voigt/synth_voigt_noisy_{args.noise_level}_{args.split}.pt'
-        else:
-            model_path = f'models/synth_voigt/synth_voigt_noisy_{args.noise_level}_{args.synth_length}.pt'
-        test_dset = TensorDataset(torch.tensor(data).float(), torch.tensor(labels).long())
-        model = ConvModel(output_size=16, hidden_layers = 1, hidden_size = 64, kernel_size=31)
-        time_dim = -1
-        time_length = args.synth_length
     elif args.dataset == 'sleepedf':
         if args.validate:
             test_dset = EEGSleepDataset(args.data_path, split = args.split, dataset = 'val', use_edf_20 = True, normalize = True, n_samples = args.n_samples, channels = ['EEG Fpz-Cz'])
@@ -142,8 +121,7 @@ def load_data_and_model(args, device, subsample=False, seed = 0):
         time_length = 3000
     else:
         raise ValueError('Dataset not supported')
-    if not args.random_model:
-        model.load_state_dict(torch.load(model_path, map_location=device))
+    model.load_state_dict(torch.load(model_path, map_location=device))
     test_dloader = DataLoader(test_dset, batch_size=10, shuffle=False)
     model.eval().to(device)
     return test_dloader, model, Fs, time_dim, time_length
