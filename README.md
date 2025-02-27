@@ -16,6 +16,7 @@ python3 preprocess_sleepedf.py --root_folder /path/to/sleep-casette/ --out_folde
 ### PAM, ECG and Epilepsy
 Download the datasets from the TimeX experiments: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/B0DEQJ.
 
+## Citation
 If you use this code, please cite the original paper:
 ```
 @article{brusch2024flextime,
