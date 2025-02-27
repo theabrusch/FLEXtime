@@ -14,19 +14,12 @@ filterbank_params = {
     'time_reg': [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 }
 
-# filterbank_params = {
-#     'nfilters': [512, 512, 128, 64, 32, 256],
-#     'ntaps': [501, 901, 205, 75, 105, 901],
-#     'keepratio': [0.05, 0.05, 0.05, 0.1, 0.1, 0.1],
-#     'time_reg': [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
-# }
-
 freqrise_cells = [128, 128, 32, 32, 64, 256]
 dynamask_keep_ratios = [0.1, 0.05, 0.05, 0.05, 0.05, 0.1]
 #freqrise_samples = [10001, 10001, 5001, 5001, 5001, 10000]
 freqrise_samples = [10001, 10001, 5000, 5000, 5000, 10000]
 
-methods = ['saliency', 'gxi', 'guided-backprop', 'freqrise', 'ig', 'freqmask', 'filterbank']
+methods = ['saliency', 'gxi', 'guided-backprop', 'freqrise', 'ig', 'freqmask', 'flextime']
 method_names = ['Saliency*', 'G$\\times$I*', 'GB*', 'FreqRISE', 'IG*', 'FreqMask', 'FLEXtime']
 
 # gather results
@@ -48,7 +41,7 @@ for metric in ['sensitivity', 'relative_output_sensitivity', 'insertion', 'smoot
                 method_string = f'{method}_{dynamask_keep_ratios[i]}_perturb_True_1.0'
                 if metric == 'sensitivity' or metric == 'relative_output_sensitivity':
                     method_string = f'{method}_{dynamask_keep_ratios[i]}_perturb_True_time_reg_1.0'
-            elif method == 'filterbank':
+            elif method == 'flextime':
                 if filterbank_params['time_reg'][i] > 1e-6:
                     method_string = f'{method}_{filterbank_params['nfilters'][i]}_{filterbank_params['ntaps'][i]}_{filterbank_params['keepratio'][i]}_{filterbank_params['time_reg'][i]}'
                 else:
@@ -86,8 +79,6 @@ metric_results = collected_results[table_to_generate]
 for j, method_name in enumerate(method_names):
     table_line = f"{method_name} "
     summed_rank = 0
-    if method_name == 'FLEXtime':
-        print('hej')
     for i, dataset in enumerate(datasets):
         method_string = method_name
         mean_ = metric_results[dataset]['mean'][j]
@@ -154,5 +145,4 @@ plt.xlabel('Faithfulness')
 plt.ylabel('Complexity')
 plt.legend(ncols = 3, loc = 'upper left', fontsize = 8, columnspacing = 0.5)
 plt.tight_layout()
-plt.savefig('/Users/theb/Documents/PhD/Udveksling/Explainability/flextime/faithfulness_vs_complexity.pdf')
 plt.show()
