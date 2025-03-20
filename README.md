@@ -1,6 +1,6 @@
 # FLEXtime: Filterbank learning to explain time series
 
-This repository implements FLEXtime (Filterbank Learning to EXplain time series).
+This repository implements FLEXtime (Filterbank Learning to EXplain time series). If you have any questions, please contact me on theb@dtu.dk. 
 
 Link to paper: https://arxiv.org/abs/2411.05841.
 
