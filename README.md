@@ -16,6 +16,12 @@ python3 preprocess_sleepedf.py --root_folder /path/to/sleep-casette/ --out_folde
 ### PAM, ECG and Epilepsy
 Download the datasets from the TimeX experiments: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/B0DEQJ.
 
+## Training the models
+To train the models for AudioMNIST, SleepEDF and the synthetic dataset, use the scripts in the train_models/ folder. To train the remaining models, use the code provided by the TimeX authors: https://github.com/mims-harvard/TimeX. 
+
+## Running the experiments
+The experiments can now be run using the main.py script. This has to be run once for every dataset and every seed to reproduce the results from the paper. The script saves pickle files containing the computed explanations for each dataset and seeds and runs the faithfulness tests. The computation of the complexity and smoothness scores then happens posthoc in the collect_results.py script.
+
 ## Citation
 If you use this code, please cite the original paper:
 ```
